@@ -25,4 +25,4 @@ jobs:
               with:
                   context: . # Directory containing your Dockerfile
                   push: true # Push the image to Docker Hub
-                  tags: ${{ secrets.NXERADOCKERHUBUSERNAME }}/nxvpn:latest # Tag your image
+                  tags: ${{ secrets.NXERADOCKERHUBUSERNAME }}/nxvpnapi:latest # Tag your image
