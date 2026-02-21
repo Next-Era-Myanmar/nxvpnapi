@@ -1,0 +1,23 @@
+# macOS
+.DS_Store
+
+# Rust
+/target/
+**/*.rs.bk
+
+# Env files
+.env
+.env.*
+!.env.example
+
+# IDE / Editor
+.idea/
+.vscode/
+
+# Logs
+*.log
+
+# Docker local overrides
+docker-compose.override.yml
+/migrations/2026-02-18-000002_seed_admin_user
+/migrations/2026-02-20-000004_seed_nyan_and_outline

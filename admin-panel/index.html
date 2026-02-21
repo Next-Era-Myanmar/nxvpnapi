@@ -1,0 +1,140 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>NXVPN Admin Panel</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/admin/styles.css" />
+</head>
+<body class="bg-slate-950 text-slate-100 min-h-screen">
+  <div class="bg-pattern fixed inset-0 -z-10"></div>
+
+  <main class="max-w-7xl mx-auto px-4 py-8 md:py-10">
+    <header class="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-8">
+      <div>
+        <p class="text-xs tracking-[0.18em] uppercase text-cyan-300">NXVPN Control</p>
+        <h1 class="text-3xl md:text-4xl font-bold">Admin Panel</h1>
+      </div>
+      <div class="flex flex-wrap items-center gap-2">
+        <input id="apiBaseUrl" class="input w-64" placeholder="API Base URL" />
+        <button id="saveApiBaseBtn" class="btn-secondary">Save URL</button>
+        <button id="logoutBtn" class="btn-danger hidden">Logout</button>
+      </div>
+    </header>
+
+    <section id="loginSection" class="panel max-w-lg mx-auto">
+      <h2 class="text-xl font-semibold mb-4">Login</h2>
+      <form id="loginForm" class="space-y-3">
+        <input id="loginUsername" class="input w-full" placeholder="Username" required />
+        <input id="loginPassword" class="input w-full" type="password" placeholder="Password" required />
+        <button type="submit" class="btn-primary w-full">Sign In</button>
+      </form>
+    </section>
+
+    <section id="dashboardSection" class="hidden space-y-6">
+      <div class="panel">
+        <div class="flex flex-wrap items-center justify-between gap-3">
+          <div>
+            <p class="text-sm text-slate-300">Authenticated as</p>
+            <p id="currentUserText" class="font-semibold"></p>
+          </div>
+          <p id="statusText" class="text-sm text-cyan-200"></p>
+        </div>
+      </div>
+
+      <div class="grid lg:grid-cols-2 gap-6">
+        <section class="panel lg:col-span-2">
+          <div class="flex items-center justify-between mb-4">
+            <h2 class="text-lg font-semibold">My Security</h2>
+          </div>
+          <form id="changeMyPasswordForm" class="grid md:grid-cols-3 gap-2">
+            <input class="input" id="myCurrentPassword" type="password" placeholder="Current Password" required />
+            <input class="input" id="myNewPassword" type="password" placeholder="New Password" required />
+            <button type="submit" class="btn-primary">Change My Password</button>
+          </form>
+        </section>
+
+        <section class="panel">
+          <div class="flex items-center justify-between mb-4">
+            <h2 class="text-lg font-semibold">User Management</h2>
+            <button id="refreshUsersBtn" class="btn-secondary">Refresh</button>
+          </div>
+
+          <form id="createUserForm" class="grid sm:grid-cols-2 gap-2 mb-4">
+            <input class="input" id="createDisplayName" placeholder="Display Name" />
+            <input class="input" id="createUsername" placeholder="Username" required />
+            <input class="input" id="createPassword" type="password" placeholder="Password" required />
+            <input class="input" id="createContactEmail" placeholder="Contact Email" />
+            <input class="input" id="createExpiredAt" type="datetime-local" />
+            <select class="input" id="createType">
+              <option value="user">user</option>
+              <option value="admin">admin</option>
+            </select>
+            <button type="submit" class="btn-primary sm:col-span-2">Create User</button>
+          </form>
+
+          <div class="overflow-auto max-h-[32rem]">
+            <table class="w-full text-sm">
+              <thead class="text-slate-300">
+                <tr>
+                  <th class="text-left py-2">ID</th>
+                  <th class="text-left py-2">Username</th>
+                  <th class="text-left py-2">Contact Email</th>
+                  <th class="text-left py-2">Expire Status</th>
+                  <th class="text-left py-2">Type</th>
+                  <th class="text-left py-2">Actions</th>
+                </tr>
+              </thead>
+              <tbody id="usersTbody"></tbody>
+            </table>
+          </div>
+        </section>
+
+        <section class="panel">
+          <div class="flex items-center justify-between mb-4">
+            <h2 class="text-lg font-semibold">Outline Key Management</h2>
+            <button id="refreshOutlineBtn" class="btn-secondary">Refresh</button>
+          </div>
+
+          <form id="outlineFilterForm" class="grid sm:grid-cols-3 gap-2 mb-4">
+            <input class="input" id="filterParentId" type="number" placeholder="parent_id" />
+            <label class="input flex items-center gap-2">
+              <input id="filterParentsOnly" type="checkbox" />
+              <span>parents_only</span>
+            </label>
+            <button class="btn-secondary" type="submit">Apply Filter</button>
+          </form>
+
+          <form id="createOutlineForm" class="grid sm:grid-cols-2 gap-2 mb-4">
+            <input class="input" id="outlineName" placeholder="Name" required />
+            <input class="input" id="outlineCountry" placeholder="Country" />
+            <input class="input sm:col-span-2" id="outlineKeyValue" placeholder="Outline Key (empty for parent group)" />
+            <input class="input" id="outlineParentId" type="number" placeholder="Parent ID (optional)" />
+            <button type="submit" class="btn-primary sm:col-span-2">Create Outline Key</button>
+          </form>
+
+          <div class="overflow-auto max-h-[32rem]">
+            <table class="w-full text-sm">
+              <thead class="text-slate-300">
+                <tr>
+                  <th class="text-left py-2">ID</th>
+                  <th class="text-left py-2">Name</th>
+                  <th class="text-left py-2">Parent</th>
+                  <th class="text-left py-2">Actions</th>
+                </tr>
+              </thead>
+              <tbody id="outlineTbody"></tbody>
+            </table>
+          </div>
+        </section>
+      </div>
+    </section>
+  </main>
+
+  <script src="/admin/app.js"></script>
+</body>
+</html>
